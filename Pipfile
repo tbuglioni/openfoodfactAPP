@@ -6,6 +6,13 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
+autopep8 = "*"
+flake8 = "*"
+requests = "*"
+peewee = "*"
+mysql-connector-python = "*"
+python-dotenv = "*"
+black = "*"
 
 [requires]
 python_version = "3.8"
