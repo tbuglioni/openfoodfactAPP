@@ -34,26 +34,14 @@ class ImportApi:
         if self.status_code == 200:
             results = self.actual_request.json()
             products = results["products"]
-            for product in products:
-                try:
-                    if (
-                        product["product_name"]
-                        and product["nutrition_grades"]
-                        and product["stores"]
-                        and product["categories"]
-                    ):
-                        print(
-                            "NOM :",
-                            product["product_name"],
-                            "/ GRADE :",
-                            product["nutrition_grades"],
-                            "/ MAGASIN :",
-                            product["stores"],
-                            "/ CATEGORIE :",
-                            product["categories"],
-                        )
-                except:
-                    pass
+            return products
         else:
-            print("get file : there no file to get")
+            print("get file : there no file to get, status code : ", self.status_code)
 
+### independant test section
+
+test = ImportApi()
+test.api_parameters()
+test.api_connexion()
+test.get_product()
+### test = ok

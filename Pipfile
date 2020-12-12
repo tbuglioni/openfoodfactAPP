@@ -13,6 +13,7 @@ peewee = "*"
 mysql-connector-python = "*"
 python-dotenv = "*"
 black = "*"
+pymysql = "*"
 
 [requires]
 python_version = "3.8"
