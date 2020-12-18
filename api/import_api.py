@@ -3,14 +3,18 @@ import requests
 
 class ImportApi:
     def __init__(self):
-        self.page = 1
-        self.page_size = 100
-        self.actual_request = 0
-        self.status_code = 0
+        self.page = None
+        self.page_size = None
+        self.actual_request = None
+        self.status_code = None
+        self.imported_file = None
 
-    def api_parameters(self, nbr_page=1, size_page=100):
+    def api_parameters(self, nbr_page=1, size_page=1000):
         self.page = nbr_page
         self.page_size = size_page
+
+    def get_status_code(self):
+        return self.status_code
 
     def api_connexion(self):
         try:
@@ -30,18 +34,19 @@ class ImportApi:
                 "connexion : Ooops there some troubles with the app, check internet connexion please"
             )
 
-    def get_product(self):
+    def import_products(self):
         if self.status_code == 200:
             results = self.actual_request.json()
             products = results["products"]
-            return products
+            self.imported_file = products
+            return self.imported_file
         else:
             print("get file : there no file to get, status code : ", self.status_code)
 
-### independant test section
 
+"""
 test = ImportApi()
 test.api_parameters()
 test.api_connexion()
-test.get_product()
-### test = ok
+print(test.import_products())
+"""
