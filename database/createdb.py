@@ -1,16 +1,15 @@
 import mysql.connector
 import dotenv
 import os
+
 dotenv.load_dotenv()
 
 
 class CreateDb:
-
     def __init__(self):
         self.db = mysql.connector.connect(
-            host="localhost",
-            user=os.getenv("USER_DB"),
-            passwd=os.getenv("PASSWORD_DB"))
+            host="localhost", user=os.getenv("USER_DB"), passwd=os.getenv("PASSWORD_DB")
+        )
 
     def create_db(self):
         try:
@@ -21,4 +20,3 @@ class CreateDb:
             print(
                 "trouble : no connexion with MySQL please check MySQL on your computer"
             )
-

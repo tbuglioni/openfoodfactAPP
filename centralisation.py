@@ -1,36 +1,47 @@
 from api import cleaner
 from api import import_api
-from database import adder
+from database import modificator
 from database import createtables
 
 
-#instance
-my_importer = import_api.ImportApi()
-my_cleaner = cleaner.Cleaner()
-my_create_tables = createtables.CreateTables()
-my_adder = adder.Adder()
+class Centralisation:
+    def __init__(self):
+        self.importer = import_api.ImportApi()
+        self.cleaner = cleaner.Cleaner()
+        self.create_table = createtables.CreateTables()
+        self.adder = modificator.Modificator()
 
-#api
-my_importer.api_parameters()
-my_importer.api_connexion()
+    def create_tables(self):
+        self.create_table.build_all_tables()
+        self.adder.run_db()
+
+    def add_in_table(self, page):
+
+        self.importer.api_parameters(page)
+        self.importer.api_connexion()
+
+        imported_file_status = self.importer.get_status_code()
+        imported_file = self.importer.import_products()
+
+        self.cleaner.get_imported_file(imported_file, imported_file_status)
+        self.cleaner.spliter()
+        cleaned_file = self.cleaner.get_cleaned_list()
+
+        self.adder.get_cleaned_list(cleaned_file)
+        self.adder.add_in_all_tables()
+        self.cleaner.delete_cleaned_list()
 
 
 
-#cleaner
-imported_file_status = my_importer.get_status_code()
-imported_file = my_importer.import_products()
 
-my_cleaner.get_imported_file(imported_file, imported_file_status)
+    def tester(self):
+        self.adder.get_x_categories(5)
+        self.adder.get_x_products(5, 2)
+        self.adder.get_better_choice(3)
 
-my_cleaner.spliter()
-
-cleaned_file = my_cleaner.get_cleaned_list()
-
-
-#create db/tables
-my_create_tables.build_all_tables()
-
-
-my_adder.run_db()
-my_adder.get_cleaned_list(cleaned_file)
-my_adder.add_in_all_tables()
+brain = Centralisation()
+brain.create_tables()
+brain.add_in_table(1)
+brain.add_in_table(2)
+brain.add_in_table(3)
+brain.tester()
