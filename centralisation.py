@@ -1,7 +1,9 @@
 from api import cleaner
 from api import import_api
-from database import modificator
 from database import createtables
+from database import getter
+from database import adder
+from database import createdb
 
 
 class Centralisation:
@@ -9,7 +11,12 @@ class Centralisation:
         self.importer = import_api.ImportApi()
         self.cleaner = cleaner.Cleaner()
         self.create_table = createtables.CreateTables()
-        self.adder = modificator.Modificator()
+        self.getter = getter.Getter()
+        self.adder = adder.Adder()
+        self.create_db = createdb.CreateDb()
+
+    def create_db(self):
+        self.create_db.create_db
 
     def create_tables(self):
         self.create_table.build_all_tables()
@@ -30,18 +37,3 @@ class Centralisation:
         self.adder.get_cleaned_list(cleaned_file)
         self.adder.add_in_all_tables()
         self.cleaner.delete_cleaned_list()
-
-
-
-
-    def tester(self):
-        self.adder.get_x_categories(5)
-        self.adder.get_x_products(5, 2)
-        self.adder.get_better_choice(3)
-
-brain = Centralisation()
-brain.create_tables()
-brain.add_in_table(1)
-brain.add_in_table(2)
-brain.add_in_table(3)
-brain.tester()

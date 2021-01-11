@@ -7,13 +7,6 @@ from database.createtables import AllCategory
 from database.createtables import DescriptionProductCategory
 from tqdm import tqdm
 
-# to do :
-# get importer 5 catégories (aleatoire) ok
-# get importer 5 noms de produits (aleatoire) avec une catégorie (aleatoire) ok
-# choice selectionner le nom d'un produit
-# get obtenir un substitut  - en cours
-# save enregistrer le substitut
-
 dotenv.load_dotenv()
 
 
@@ -45,7 +38,11 @@ class Modificator:
         if count_all_value < nbr_of_values:
             nbr_of_values = count_all_value
         print(" ---- liste d'aliments avec cette categorie ----")
-        print("il y a en tout", count_all_value, "produit(s) avec cette categorie, en voici une partie")
+        print(
+            "il y a en tout",
+            count_all_value,
+            "produit(s) avec cette categorie, en voici une partie",
+        )
         query = (
             Product.select(Product, DescriptionProductCategory)
             .join(DescriptionProductCategory)
@@ -58,44 +55,97 @@ class Modificator:
             print(loop.id, loop.name)
 
     def get_better_choice(self, selected_product_id):
-        print(" ---- analyse du produit selectionné ----")
-        # obtenir categories d'un produit ok
-        # obtenir nutriscore d'un produit OK
-        origin_product_categories = []
-        origin_product_categories_dict = {}
-        i = 0
-        query = (
-            DescriptionProductCategory
-            .select(Product.product_nutriscore, DescriptionProductCategory.id_category)
-            .join(Product, on=(Product.id == DescriptionProductCategory.id_product_id))
-            .where(Product.id == selected_product_id)
+        print(
+            " ---- analyse des categories du produit selectionné par ordre de presence dans la BD----"
         )
 
+        # recuperer les caracteristiques du produit
+        subquery = DescriptionProductCategory.select(
+            DescriptionProductCategory.id_category
+        ).where(DescriptionProductCategory.id_product == selected_product_id)
+
+        # retourner les caracteristiques les plus importantes (3)
+        query = (
+            DescriptionProductCategory.select(
+                DescriptionProductCategory.id_category,
+                peewee.fn.COUNT(DescriptionProductCategory.id_category).alias("count"),
+            )
+            .where(DescriptionProductCategory.id_category.in_(subquery))
+            .group_by(DescriptionProductCategory.id_category)
+            .order_by(peewee.fn.COUNT(DescriptionProductCategory.id_category).desc())
+            .limit(3)
+        )
+        final_choice = []
         for cate in query:
-            origin_product_nutriscore = cate.id_product.product_nutriscore
-            category_number = cate.id_category
+            product_number = cate.id_category
+            final_choice.append(cate.id_category)
+            print(product_number)
+        print(final_choice)
 
-            print("le produit selectionné à la caracteristique :", category_number)
-            print(type(category_number))
+        nutri_product = (
+            Product.select(Product.product_nutriscore)
+            .where(Product.id == selected_product_id)
+            .get()
+        )
+        nutri_product = nutri_product.product_nutriscore
+        nutri_product = str(nutri_product)
+        nutri_product = [int(s) for s in nutri_product.split() if s.isdigit()]
+        nutri_product = int(nutri_product[0])
 
-            origin_product_categories.append(category_number)
-            origin_product_categories_dict[i] = cate.id_category
-            i += 1
+        if nutri_product > 1:
+            nutri_product -= 1
 
+        # retouner le bon produit
+        DPCB = DescriptionProductCategory.alias()
+        DPCC = DescriptionProductCategory.alias()
+        scnd_query = (
+            DescriptionProductCategory.select(
+                DescriptionProductCategory.id_product,
+                DescriptionProductCategory.id_category,
+                DPCB.id_category,
+                DPCC.id_category,
+                Product.product_nutriscore,
+            )
+            .join(DPCB, on=(DescriptionProductCategory.id_product == DPCB.id_product))
+            .join(DPCC, on=(DescriptionProductCategory.id_product == DPCB.id_product))
+            .join(Product, on=(Product.id == DescriptionProductCategory.id_product))
+            .where(
+                (DescriptionProductCategory.id_category == final_choice[0])
+                & (DPCB.id_category == final_choice[1])
+                & (DPCC.id_category == final_choice[2])
+                & (Product.product_nutriscore == nutri_product)
+                & (DescriptionProductCategory.id_product != selected_product_id)
+            )
+            .order_by(peewee.fn.Rand())
+            .limit(1)
+        )
 
+        for cate in scnd_query:
+            print(cate.id_product)
 
-        print("le nutriscore est (en chiffre) : ", origin_product_nutriscore)
-        if origin_product_nutriscore == Nutriscore(1):
-            print("le chiffre est excelent")
+            query = (
+                Product.select()
+                .join(
+                    DescriptionProductCategory,
+                    on=(DescriptionProductCategory.id_product == Product.id),
+                )
+                .join(
+                    AllCategory,
+                    on=(DescriptionProductCategory.id_category == AllCategory.id),
+                )
+                .join(Nutriscore, on=(Product.product_nutriscore == Nutriscore.id))
+                .where(Product.id == cate.id_product)
+                .limit(1)
+            )
+            for elt in query:
+                print(elt.name, elt.shop, elt.url, elt.product_nutriscore.nutriscores)
 
+            # print("le produit selectionné à la caracteristique :", product_number)
+            # a = str(category_number)
+            # b = [int(s) for s in a.split() if s.isdigit()] # pour obtenir en int la categorie
+            # print("voici le texte : ", b, b[0] + 1)
 
-        print("les categories du produit sont :", origin_product_categories)
-        print( origin_product_categories_dict)
-
-        #obtenir produit avec au mois 3 categories pareils et un nutriscore sup
-
-
-
+        # obtenir produit avec au mois 3 categories pareils et un nutriscore sup
 
     def add_in_all_tables(self):
         for elements in tqdm(self.cleaned_list):
@@ -105,7 +155,7 @@ class Modificator:
             actual_categories = elements["categories"]
             actual_url = elements["url"]
 
-            if len(actual_categories)<3:
+            if len(actual_categories) < 3:
                 continue
 
             try:
@@ -143,5 +193,3 @@ class Modificator:
                         pass
             except:
                 pass
-
-

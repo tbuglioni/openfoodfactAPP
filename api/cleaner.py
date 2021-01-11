@@ -59,7 +59,3 @@ class Cleaner:
 
     def delete_cleaned_list(self):
         self.cleaned_list = []
-
-    # en minuscule
-    # en liste
-    # exporter chacun en SQL

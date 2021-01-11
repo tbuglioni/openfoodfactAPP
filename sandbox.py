@@ -81,7 +81,9 @@ class SandBox:
             print(loop.id, loop.name)
 
     def get_better_choice(self, selected_product_id):
-        print(" ---- analyse des categories du produit selectionné par ordre de presence dans la BD----")
+        print(
+            " ---- analyse des categories du produit selectionné par ordre de presence dans la BD----"
+        )
 
         # recuperer les caracteristiques du produit
         subquery = DescriptionProductCategory.select(
@@ -106,7 +108,11 @@ class SandBox:
             print(product_number)
         print(final_choice)
 
-        nutri_product = Product.select(Product.product_nutriscore).where(Product.id == selected_product_id).get()
+        nutri_product = (
+            Product.select(Product.product_nutriscore)
+            .where(Product.id == selected_product_id)
+            .get()
+        )
         nutri_product = nutri_product.product_nutriscore
         nutri_product = str(nutri_product)
         nutri_product = [int(s) for s in nutri_product.split() if s.isdigit()]
@@ -115,26 +121,27 @@ class SandBox:
         if nutri_product > 1:
             nutri_product -= 1
 
-
-        #retouner le bon produit
+        # retouner le bon produit
         DPCB = DescriptionProductCategory.alias()
         DPCC = DescriptionProductCategory.alias()
         scnd_query = (
-            DescriptionProductCategory
-            .select(DescriptionProductCategory.id_product,
-                    DescriptionProductCategory.id_category,
-                    DPCB.id_category,
-                    DPCC.id_category,
-                    Product.product_nutriscore)
+            DescriptionProductCategory.select(
+                DescriptionProductCategory.id_product,
+                DescriptionProductCategory.id_category,
+                DPCB.id_category,
+                DPCC.id_category,
+                Product.product_nutriscore,
+            )
             .join(DPCB, on=(DescriptionProductCategory.id_product == DPCB.id_product))
             .join(DPCC, on=(DescriptionProductCategory.id_product == DPCB.id_product))
             .join(Product, on=(Product.id == DescriptionProductCategory.id_product))
-            .where((DescriptionProductCategory.id_category == final_choice[0]) &
-                   (DPCB.id_category == final_choice[1]) &
-                   (DPCC.id_category == final_choice[2]) &
-                   (Product.product_nutriscore == nutri_product) &
-                   (DescriptionProductCategory.id_product != selected_product_id)
-                   )
+            .where(
+                (DescriptionProductCategory.id_category == final_choice[0])
+                & (DPCB.id_category == final_choice[1])
+                & (DPCC.id_category == final_choice[2])
+                & (Product.product_nutriscore == nutri_product)
+                & (DescriptionProductCategory.id_product != selected_product_id)
+            )
             .order_by(peewee.fn.Rand())
             .limit(1)
         )
@@ -142,12 +149,22 @@ class SandBox:
         for cate in scnd_query:
             print(cate.id_product)
 
-            # print("le produit selectionné à la caracteristique :", product_number)
-            # a = str(category_number)
-            # b = [int(s) for s in a.split() if s.isdigit()] # pour obtenir en int la categorie
-            # print("voici le texte : ", b, b[0] + 1)
-
-        # obtenir produit avec au mois 3 categories pareils et un nutriscore sup
+            query = (
+                Product.select()
+                .join(
+                    DescriptionProductCategory,
+                    on=(DescriptionProductCategory.id_product == Product.id),
+                )
+                .join(
+                    AllCategory,
+                    on=(DescriptionProductCategory.id_category == AllCategory.id),
+                )
+                .join(Nutriscore, on=(Product.product_nutriscore == Nutriscore.id))
+                .where(Product.id == cate.id_product)
+                .limit(1)
+            )
+            for elt in query:
+                print(elt.name, elt.shop, elt.url, elt.product_nutriscore.nutriscores)
 
 
 mysandbox = SandBox()

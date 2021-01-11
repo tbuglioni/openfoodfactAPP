@@ -1,10 +1,10 @@
 import peewee
 import dotenv
 import os
-import database.createdb
+
+
 
 dotenv.load_dotenv()
-database.createdb.CreateDb().create_db()
 
 
 mysql_db = peewee.MySQLDatabase(
@@ -52,21 +52,21 @@ class DescriptionProductCategory(Database):
 
 class CreateTables:
     def build_all_tables(self):
-        mysql_db.connect()
         mysql_db.create_tables(
             [Product, Nutriscore, DescriptionProductCategory, AllCategory]
         )
-
-        data = [
-            {Nutriscore.nutriscores: "a"},
-            {Nutriscore.nutriscores: "b"},
-            {Nutriscore.nutriscores: "c"},
-            {Nutriscore.nutriscores: "d"},
-            {Nutriscore.nutriscores: "e"},
-        ]
-        with mysql_db.atomic():
-            Nutriscore.insert_many(data).execute()
-
+        try:
+            data = [
+                {Nutriscore.nutriscores: "a"},
+                {Nutriscore.nutriscores: "b"},
+                {Nutriscore.nutriscores: "c"},
+                {Nutriscore.nutriscores: "d"},
+                {Nutriscore.nutriscores: "e"},
+            ]
+            with mysql_db.atomic():
+                Nutriscore.insert_many(data).execute()
+        except peewee.IntegrityError:
+            pass
         mysql_db.close()
 
     def connect_to_db(self):

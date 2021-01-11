@@ -14,6 +14,15 @@ class CreateDb:
     def create_db(self):
         try:
             mycursor = self.db.cursor()
+            mycursor.execute("CREATE DATABASE IF NOT EXISTS openfoodfact")
+        except:
+            print(
+                "trouble : no connexion with MySQL please check MySQL on your computer"
+            )
+
+    def recreate_db(self):
+        try:
+            mycursor = self.db.cursor()
             mycursor.execute("DROP DATABASE IF EXISTS openfoodfact")
             mycursor.execute("CREATE DATABASE openfoodfact")
         except:

@@ -42,11 +42,3 @@ class ImportApi:
             return self.imported_file
         else:
             print("get file : there no file to get, status code : ", self.status_code)
-
-
-"""
-test = ImportApi()
-test.api_parameters()
-test.api_connexion()
-print(test.import_products())
-"""
