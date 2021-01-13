@@ -29,34 +29,33 @@ class LinkApiDb:
         self.create_table.build_all_tables()
         self.adder.run_db()
 
-    def _add_in_table(self, page):
-        self.importer.api_parameters(page)
-        self.importer.api_connexion()
+    def _add_in_table(self, page_min, nbr_of_page):
 
-        imported_file_status = self.importer.get_status_code()
-        imported_file = self.importer.import_products()
+        for elt in range(nbr_of_page):
+            self.importer.api_parameters(page_min)
+            self.importer.api_connexion()
 
-        self.cleaner.get_imported_file(imported_file, imported_file_status)
-        self.cleaner.spliter()
-        cleaned_file = self.cleaner.get_cleaned_list()
+            imported_file_status = self.importer.get_status_code()
+            imported_file = self.importer.import_products()
 
-        self.adder.get_cleaned_list(cleaned_file)
-        self.adder.add_in_all_tables()
-        self.cleaner.delete_cleaned_list()
+            self.cleaner.get_imported_file(imported_file, imported_file_status)
+            self.cleaner.spliter()
+            cleaned_file = self.cleaner.get_cleaned_list()
+
+            self.adder.get_cleaned_list(cleaned_file)
+            self.adder.add_in_all_tables(page_min, nbr_of_page)
+            self.cleaner.delete_cleaned_list()
+            page_min += 1
 
 
     def initialise_db(self):
         self._recreate_db()
         self._create_tables()
-        self._add_in_table(1)
-        self._add_in_table(2)
-        self._add_in_table(3)
+        self._add_in_table(1, 3)
 
     def update_db(self):
         self._create_tables()
-        self._add_in_table(1)
-        self._add_in_table(2)
-        self._add_in_table(3)
+        self._add_in_table(1, 3)
 
     def use_previous_db(self):
         """ use previous db and check if db is not empty"""

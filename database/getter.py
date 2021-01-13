@@ -129,21 +129,15 @@ class Getter:
         for cate in query:
             query = (
                 Product.select()
-                    .join(
-                    DescriptionProductCategory,
-                    on=(DescriptionProductCategory.id_product == Product.id),
-                )
-                    .join(
-                    AllCategory,
-                    on=(DescriptionProductCategory.id_category == AllCategory.id),
-                )
                     .join(Nutriscore, on=(Product.product_nutriscore == Nutriscore.id))
+                    .join(DescriptionProductCategory, on=(Product.id == DescriptionProductCategory.id_product))
+                    .join(AllCategory, on=(DescriptionProductCategory.id_category == AllCategory.id))
                     .where(Product.id == cate.id_product)
                     .limit(1)
             )
-            for elt in query:
-
-                if int(str(elt)) > 0 or elt is not None:
+            size = len(query)
+            if size > 0:
+                for elt in query:
                     print("===============================================")
                     print("------*** product name :", elt.name, "***------")
                     print(" nutriscore --> ", elt.product_nutriscore.nutriscores)
@@ -152,11 +146,10 @@ class Getter:
                     print("===============================================")
                     print("===============================================")
                     return self.get_int_from_peewee(elt.id)
-                else:
-                    print("Ooops we don't find best product for your choice sorry :/")
+            else:
+                print("Ooops we don't find better product for your choice sorry :/")
 
     def get_better_choice(self, selected_product_id):
-
         self.get_caracteristiques_origine(selected_product_id)
         self.get_nutriscore_target(selected_product_id)
         return self.find_the_better_choice(selected_product_id)
@@ -164,3 +157,20 @@ class Getter:
     def get_count_all_product(self):
         quantity = Product.select(peewee.fn.COUNT(Product.id).alias("count")).get()
         return int(quantity.count)
+
+    def get_save_recommendation(self):
+        print("list of products saved")
+        query = (Product
+                 .select()
+                 .join(Nutriscore, on=(Product.product_nutriscore == Nutriscore.id))
+                 .where(Product.record == 1))
+        id = 1
+        for elt in query:
+
+            print(id,
+                  "product name:", elt.name,
+                  "// nutriscore:", elt.product_nutriscore.nutriscores,
+                  "// shop:", elt.shop,
+                  "// url:", elt.url
+                  )
+            id += 1

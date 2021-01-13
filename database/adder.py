@@ -18,8 +18,8 @@ class Adder:
     def get_cleaned_list(self, the_cleaned_list):
         self.cleaned_list = the_cleaned_list
 
-    def add_in_all_tables(self):
-        for elements in tqdm(self.cleaned_list):
+    def add_in_all_tables(self, page, loop):
+        for elements in tqdm(self.cleaned_list, desc="page: {}/{}".format(page, loop)):
             actual_name = elements["name"]
             actual_store = elements["store"]  # 1 ou plus
             actual_nutriscore = elements["nutriscore"]
