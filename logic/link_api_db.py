@@ -1,10 +1,12 @@
+import peewee
+
 from api import cleaner
 from api import import_api
 from database import createtables
 from database import adder
 from database import getter
 from database import createdb
-import peewee
+
 
 
 
