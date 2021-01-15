@@ -6,12 +6,14 @@ dotenv.load_dotenv()
 
 
 class CreateDb:
+    """ create database """
     def __init__(self):
         self.db = mysql.connector.connect(
             host="localhost", user=os.getenv("USER_DB"), passwd=os.getenv("PASSWORD_DB")
         )
 
     def create_db(self):
+        """ create database if not exist """
         try:
             mycursor = self.db.cursor()
             mycursor.execute("CREATE DATABASE IF NOT EXISTS openfoodfact")
@@ -21,6 +23,7 @@ class CreateDb:
             )
 
     def recreate_db(self):
+        """ delete and create database"""
         try:
             mycursor = self.db.cursor()
             mycursor.execute("DROP DATABASE IF EXISTS openfoodfact")

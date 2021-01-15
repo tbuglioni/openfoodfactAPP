@@ -3,7 +3,6 @@ import dotenv
 import os
 
 
-
 dotenv.load_dotenv()
 
 
@@ -51,7 +50,10 @@ class DescriptionProductCategory(Database):
 
 
 class CreateTables:
-    def build_all_tables(self):
+    """ create all tables in the database """
+    @staticmethod
+    def build_all_tables():
+        """ create all tables in the database """
         mysql_db.create_tables(
             [Product, Nutriscore, DescriptionProductCategory, AllCategory]
         )
@@ -68,6 +70,3 @@ class CreateTables:
         except peewee.IntegrityError:
             pass
         mysql_db.close()
-
-    def connect_to_db(self):
-        mysql_db.connect()

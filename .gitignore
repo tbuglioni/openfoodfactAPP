@@ -1,4 +1,6 @@
 .env
+Pipfile
+Pipfile.lock
 
 # Default ignored files
 /shelf/
