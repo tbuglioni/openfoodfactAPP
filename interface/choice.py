@@ -58,7 +58,7 @@ class Choice:
                 choice = input("choose the product you want (1-5) or press q (quite) : ")
                 if choice in "12345" and int(choice) < 6:
                     self.choice_category = list_of_choice[int(choice) - 1]
-                elif choice == "q".lower():
+                elif choice == "q" or "Q":
                     self.new_product = False
                 else:
                     print("you have to select a number in the list only")
@@ -77,7 +77,7 @@ class Choice:
                 choice = input("choose the product you want (1-5) or press q (quite) : ")
                 if choice in "12345" and int(choice) < 6:
                     self.choice_product = list_of_choice[int(choice) - 1]
-                elif choice == "q".lower():
+                elif choice == "q" or "Q":
                     self.new_product = False
                 else:
                     print("you have to select a number in the list only")
@@ -158,7 +158,7 @@ class Choice:
             self.__get_saved_recommendation()
         elif choice == "3":
             self.choose_in_db_menu()
-        elif choice == "q".lower():
+        elif choice == "q" or "Q":
             self.run_app = False
         else:
             print("you have to choose a number")
