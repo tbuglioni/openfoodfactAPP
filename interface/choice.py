@@ -1,6 +1,5 @@
 from database.getter import Getter
 from logic.link_api_db import LinkApiDb
-from database.createdb import CreateDb
 from database.adder import Adder
 
 
@@ -13,15 +12,78 @@ class Choice:
     """
 
     def __init__(self):
-        self.importer = LinkApiDb()
-        self.getter = Getter()
-        self.adder = Adder()
-        self.create_db = CreateDb()
-        self.choice_category = None
-        self.choice_product = None
-        self.product_recommanded = None
-        self.run_app = True
-        self.new_product = True
+        self._importer = LinkApiDb()
+        self._getter = Getter()
+        self._adder = Adder()
+        self._choice_category = None
+        self._choice_product = None
+        self._product_recommanded = None
+        self._run_app = True
+        self._new_product = True
+
+    @property
+    def importer(self):
+        return self._importer
+
+    @importer.setter
+    def importer(self, new_value):
+        self._importer = new_value
+
+    @property
+    def getter(self):
+        return self._getter
+
+    @getter.setter
+    def getter(self, new_value):
+        self._getter = new_value
+
+    @property
+    def adder(self):
+        return self._adder
+
+    @adder.setter
+    def adder(self, new_value):
+        self._adder = new_value
+
+    @property
+    def choice_category(self):
+        return self._choice_category
+
+    @choice_category.setter
+    def choice_category(self, new_value):
+        self._choice_category = new_value
+
+    @property
+    def choice_product(self):
+        return self._choice_product
+
+    @choice_product.setter
+    def choice_product(self, new_value):
+        self._choice_product = new_value
+
+    @property
+    def product_recommanded(self):
+        return self._product_recommanded
+
+    @product_recommanded.setter
+    def product_recommanded(self, new_value):
+        self._product_recommanded = new_value
+
+    @property
+    def run_app(self):
+        return self._run_app
+
+    @run_app.setter
+    def run_app(self, new_value):
+        self._run_app = new_value
+
+    @property
+    def new_product(self):
+        return self._new_product
+
+    @new_product.setter
+    def new_product(self, new_value):
+        self._new_product = new_value
 
     def choose_in_db_menu(self):
         """choice : manage database (create, update, use previous db) """
@@ -58,7 +120,7 @@ class Choice:
                 choice = input("choose the product you want (1-5) or press q (quite) : ")
                 if choice in "12345" and int(choice) < 6:
                     self.choice_category = list_of_choice[int(choice) - 1]
-                elif choice == "q" or "Q":
+                elif choice == "q":
                     self.new_product = False
                 else:
                     print("you have to select a number in the list only")
@@ -77,7 +139,7 @@ class Choice:
                 choice = input("choose the product you want (1-5) or press q (quite) : ")
                 if choice in "12345" and int(choice) < 6:
                     self.choice_product = list_of_choice[int(choice) - 1]
-                elif choice == "q" or "Q":
+                elif choice == "q":
                     self.new_product = False
                 else:
                     print("you have to select a number in the list only")
@@ -158,7 +220,7 @@ class Choice:
             self.__get_saved_recommendation()
         elif choice == "3":
             self.choose_in_db_menu()
-        elif choice == "q" or "Q":
+        elif choice == "q":
             self.run_app = False
         else:
             print("you have to choose a number")

@@ -9,13 +9,63 @@ from database.createdb import CreateDb
 
 
 class LinkApiDb:
+    """ manager to : API and DATABASE
+    make a link between them """
     def __init__(self):
-        self.importer = ImportApi()
-        self.cleaner = Cleaner()
-        self.create_table = CreateTables()
-        self.create_db = CreateDb()
-        self.adder = Adder()
-        self.getter = Getter()
+        self._importer = ImportApi()
+        self._cleaner = Cleaner()
+        self._create_table = CreateTables()
+        self._create_db = CreateDb()
+        self._adder = Adder()
+        self._getter = Getter()
+
+    @property
+    def importer(self):
+        return self._importer
+
+    @importer.setter
+    def importer(self, new_value):
+        self._importer = new_value
+
+    @property
+    def cleaner(self):
+        return self._cleaner
+
+    @cleaner.setter
+    def cleaner(self, new_value):
+        self._cleaner = new_value
+
+    @property
+    def create_table(self):
+        return self._create_table
+
+    @create_table.setter
+    def create_table(self, new_value):
+        self._create_table = new_value
+
+    @property
+    def create_db(self):
+        return self._create_db
+
+    @create_db.setter
+    def create_db(self, new_value):
+        self._create_db = new_value
+
+    @property
+    def adder(self):
+        return self._adder
+
+    @adder.setter
+    def adder(self, new_value):
+        self._adder = new_value
+
+    @property
+    def getter(self):
+        return self._getter
+
+    @getter.setter
+    def getter(self, new_value):
+        self._getter = new_value
 
     def __recreate_db(self):
         """ delete and create database """

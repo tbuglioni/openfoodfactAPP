@@ -12,8 +12,24 @@ dotenv.load_dotenv()
 class Getter:
     """ get elements from database """
     def __init__(self):
-        self.product_category_origin = []
-        self.product_nutriscore_target = None
+        self._product_category_origin = []
+        self._product_nutriscore_target = None
+
+    @property
+    def product_category_origin(self):
+        return self._product_category_origin
+
+    @product_category_origin.setter
+    def product_category_origin(self, new_value):
+        self._product_category_origin = new_value
+
+    @property
+    def product_nutriscore_target(self):
+        return self._product_nutriscore_target
+
+    @product_nutriscore_target.setter
+    def product_nutriscore_target(self, new_value):
+        self._product_nutriscore_target = new_value
 
     @staticmethod
     def get_x_categories(nbr_of_values):

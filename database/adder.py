@@ -15,7 +15,15 @@ class Adder:
     """ add in database all cleaned products from api"""
 
     def __init__(self):
-        self.cleaned_list = None
+        self._cleaned_list = None
+
+    @property
+    def cleaned_list(self):
+        return self._cleaned_list
+
+    @cleaned_list.setter
+    def cleaned_list(self, new_value):
+        self._cleaned_list = new_value
 
     @staticmethod
     def run_db():

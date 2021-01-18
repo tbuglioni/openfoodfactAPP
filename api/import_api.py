@@ -5,11 +5,51 @@ class ImportApi:
     """ import french products from api openfoodfact"""
 
     def __init__(self):
-        self.page = None
-        self.page_size = None
-        self.actual_request = None
-        self.status_code = None
-        self.imported_file = None
+        self._page = None
+        self._page_size = None
+        self._actual_request = None
+        self._status_code = None
+        self._imported_file = None
+
+    @property
+    def page(self):
+        return self._page
+
+    @page.setter
+    def page(self, new_value):
+        self._page = new_value
+
+    @property
+    def page_size(self):
+        return self._page_size
+
+    @page_size.setter
+    def page_size(self, new_value):
+        self._page_size = new_value
+
+    @property
+    def actual_request(self):
+        return self._actual_request
+
+    @actual_request.setter
+    def actual_request(self, new_value):
+        self._actual_request = new_value
+
+    @property
+    def status_code(self):
+        return self._status_code
+
+    @status_code.setter
+    def status_code(self, new_value):
+        self._status_code = new_value
+
+    @property
+    def imported_file(self):
+        return self._imported_file
+
+    @imported_file.setter
+    def imported_file(self, new_value):
+        self._imported_file = new_value
 
     def api_parameters(self, nbr_page=1, size_page=1000):
         """ define number of page and products to import"""

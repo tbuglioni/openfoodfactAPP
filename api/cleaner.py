@@ -1,8 +1,24 @@
 class Cleaner:
     def __init__(self):
         """ clean all products imported from the api"""
-        self.imported_file = None
-        self.cleaned_list = []
+        self._imported_file = None
+        self._cleaned_list = []
+
+    @property
+    def imported_file(self):
+        return self._imported_file
+
+    @imported_file.setter
+    def imported_file(self, new_value):
+        self._imported_file = new_value
+
+    @property
+    def cleaned_list(self):
+        return self._cleaned_list
+
+    @cleaned_list.setter
+    def cleaned_list(self, new_value):
+        self._cleaned_list = new_value
 
     def get_imported_file(self, file_to_get, status_code):
         """ get previous import from api--> attribut and check status code"""
