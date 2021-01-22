@@ -37,7 +37,7 @@ class Adder:
     def add_in_all_tables(self, page, loop):
         """ add each products in the database """
         for elements in tqdm.tqdm(
-                self.cleaned_list, desc="page: {}/{}".format(page, loop)
+            self.cleaned_list, desc="page: {}/{}".format(page, loop)
         ):
             actual_name = elements["name"]
             actual_store = elements["store"]  # 1 ou plus
@@ -46,8 +46,8 @@ class Adder:
             actual_url = elements["url"]
 
             if (
-                    len(actual_categories) < 3
-            ):  # product with more than 2 category (for precision when we find product)
+                len(actual_categories) < 3
+            ):  # product with more than 2 category
                 continue
 
             try:
@@ -66,7 +66,10 @@ class Adder:
                 pass
 
             try:
-                id_product = Product.select().where(Product.name == actual_name).get()
+                id_product = (Product
+                              .select()
+                              .where(Product.name == actual_name)
+                              .get())
                 for loop in actual_categories:
                     category_name = str(loop)
                     try:

@@ -117,7 +117,8 @@ class Choice:
         try:
             if self.new_product:
                 list_of_choice = self.getter.get_x_categories(5)
-                choice = input("choose the product you want (1-5) or press q (quite) : ")
+                choice = input("choose the product you want (1-5) "
+                               "or press q (quite) : ")
                 if choice in "12345" and int(choice) < 6:
                     self.choice_category = list_of_choice[int(choice) - 1]
                 elif choice == "q":
@@ -135,8 +136,10 @@ class Choice:
         (or less if not 5 in db) / quite"""
         try:
             if self.new_product:
-                list_of_choice = self.getter.get_x_products(5, self.choice_category)
-                choice = input("choose the product you want (1-5) or press q (quite) : ")
+                list_of_choice = (self.getter
+                                  .get_x_products(5, self.choice_category))
+                choice = input("choose the product you want (1-5) "
+                               "or press q (quite) : ")
                 if choice in "12345" and int(choice) < 6:
                     self.choice_product = list_of_choice[int(choice) - 1]
                 elif choice == "q":
@@ -157,7 +160,8 @@ class Choice:
                 self.choice_product
             )
             if self.product_recommanded is None:
-                print("Ooops we don't find better product for your choice sorry :/")
+                print("Ooops we don't find better product "
+                      "for your choice sorry :/")
         else:
             pass
 
@@ -213,7 +217,8 @@ class Choice:
             print(id_looper, elt)
             id_looper += 1
 
-        choice = input("select the number of your choice or press q (quite) : ")
+        choice = input("select the number of your "
+                       "choice or press q (quite) : ")
         if choice == "1":
             self.__found_new_product()
         elif choice == "2":

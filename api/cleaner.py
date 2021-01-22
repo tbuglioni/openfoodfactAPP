@@ -49,17 +49,19 @@ class Cleaner:
             for product in self.imported_file:
                 try:
                     if (
-                        len(product["product_name"]) > 2  # product.get("product_name")
+                        len(product["product_name"]) > 2
                         and product["nutrition_grades"]
                         and product["stores"]
                         and product["categories"]
                         and product["url"]
                     ):
-                        new_name = self.__cleaner_mono_entry(product["product_name"])
+                        new_name = self.__cleaner_mono_entry(
+                            product["product_name"])
                         new_nutrition_grades = self.__cleaner_mono_entry(
                             product["nutrition_grades"]
                         )
-                        new_stores = self.__cleaner_mono_entry(product["stores"])
+                        new_stores = self.__cleaner_mono_entry(
+                            product["stores"])
                         new_categories = self.__cleaner_multiples_entry(
                             product["categories"]
                         )
@@ -74,7 +76,7 @@ class Cleaner:
                             }
                         )
 
-                except KeyError:  # when the product don't match with all category required
+                except KeyError:
                     pass
 
     def get_cleaned_list(self):

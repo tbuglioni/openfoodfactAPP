@@ -37,7 +37,9 @@ class AllCategory(Database):
 
 
 class DescriptionProductCategory(Database):
-    id_product = peewee.ForeignKeyField(Product, backref="description_product_category")
+    id_product = peewee.ForeignKeyField(
+        Product,
+        backref="description_product_category")
     id_category = peewee.ForeignKeyField(
         AllCategory, backref="description_product_category"
     )
@@ -51,6 +53,7 @@ class DescriptionProductCategory(Database):
 
 class CreateTables:
     """ create all tables in the database """
+
     @staticmethod
     def build_all_tables():
         """ create all tables in the database """

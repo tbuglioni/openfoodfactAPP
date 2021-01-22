@@ -76,7 +76,8 @@ class ImportApi:
             self.status_code = self.actual_request.status_code
         except requests.exceptions.ConnectionError:
             print(
-                "connexion : Ooops there some troubles with the app, check internet connexion please"
+                "connexion : Ooops there some troubles with the app, "
+                "check internet connexion please"
             )
 
     def import_products(self):
@@ -87,4 +88,5 @@ class ImportApi:
             self.imported_file = products
             return self.imported_file
         else:
-            print("get file : there no file to get, status code : ", self.status_code)
+            print("get file : there no file to get, status code : ",
+                  self.status_code)

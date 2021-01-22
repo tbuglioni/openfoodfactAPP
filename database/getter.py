@@ -11,6 +11,7 @@ dotenv.load_dotenv()
 
 class Getter:
     """ get elements from database """
+
     def __init__(self):
         self._product_category_origin = []
         self._product_nutriscore_target = None
@@ -34,7 +35,10 @@ class Getter:
     @staticmethod
     def get_x_categories(nbr_of_values):
         """ get x category of product from db """
-        query = AllCategory.select().order_by(peewee.fn.Rand()).limit(nbr_of_values)
+        query = (AllCategory
+                 .select()
+                 .order_by(peewee.fn.Rand())
+                 .limit(nbr_of_values))
         print(" ---- category of product ---- ")
         list_of_choice = []
         id_looper = 1
@@ -64,7 +68,8 @@ class Getter:
                 on=(Product.id == DescriptionProductCategory.id_product),
             )
             .join(Nutriscore, on=(Product.product_nutriscore == Nutriscore.id))
-            .where(DescriptionProductCategory.id_category_id == category_to_find)
+            .where(DescriptionProductCategory
+                   .id_category_id == category_to_find)
             .order_by(peewee.fn.Rand())
             .limit(nbr_of_values)
         )
@@ -72,7 +77,11 @@ class Getter:
         id_loop = 1
         for loop in query:
             print(
-                id_loop, loop.name, "(nutriscore :", loop.product_nutriscore.nutriscores, ")"
+                id_loop,
+                loop.name,
+                "(nutriscore :",
+                loop.product_nutriscore.nutriscores,
+                ")",
             )
             id_loop += 1
             list_of_choice.append(loop.id)
@@ -90,11 +99,17 @@ class Getter:
         query = (
             DescriptionProductCategory.select(
                 DescriptionProductCategory.id_category,
-                peewee.fn.COUNT(DescriptionProductCategory.id_category).alias("count"),
+                (
+                    peewee.fn.COUNT(DescriptionProductCategory
+                                    .id_category).alias(
+                        "count"
+                    )
+                ),
             )
             .where(DescriptionProductCategory.id_category.in_(subquery))
             .group_by(DescriptionProductCategory.id_category)
-            .order_by(peewee.fn.COUNT(DescriptionProductCategory.id_category).desc())
+            .order_by(
+                peewee.fn.COUNT(DescriptionProductCategory.id_category).desc())
             .limit(3)
         )
         self.product_category_origin = []
@@ -136,9 +151,12 @@ class Getter:
                 DPCC.id_category,
                 Product.product_nutriscore,
             )
-            .join(DPCB, on=(DescriptionProductCategory.id_product == DPCB.id_product))
-            .join(DPCC, on=(DescriptionProductCategory.id_product == DPCB.id_product))
-            .join(Product, on=(Product.id == DescriptionProductCategory.id_product))
+            .join(DPCB, on=(
+                    DescriptionProductCategory.id_product == DPCB.id_product))
+            .join(DPCC, on=(
+                    DescriptionProductCategory.id_product == DPCB.id_product))
+            .join(Product, on=(
+                    Product.id == DescriptionProductCategory.id_product))
             .where(
                 (
                     DescriptionProductCategory.id_category
@@ -146,8 +164,10 @@ class Getter:
                 )
                 & (DPCB.id_category == self.product_category_origin[1])
                 & (DPCC.id_category == self.product_category_origin[2])
-                & (Product.product_nutriscore == self.product_nutriscore_target)
-                & (DescriptionProductCategory.id_product != selected_product_id)
+                & (Product
+                   .product_nutriscore == self.product_nutriscore_target)
+                & (DescriptionProductCategory
+                   .id_product != selected_product_id)
             )
             .order_by(peewee.fn.Rand())
             .limit(1)
@@ -156,14 +176,16 @@ class Getter:
         for cate in query:
             query = (
                 Product.select()
-                .join(Nutriscore, on=(Product.product_nutriscore == Nutriscore.id))
+                .join(Nutriscore, on=(
+                        Product.product_nutriscore == Nutriscore.id))
                 .join(
                     DescriptionProductCategory,
                     on=(Product.id == DescriptionProductCategory.id_product),
                 )
                 .join(
-                    AllCategory,
-                    on=(DescriptionProductCategory.id_category == AllCategory.id),
+                    AllCategory, on=(
+                            DescriptionProductCategory
+                            .id_category == AllCategory.id),
                 )
                 .where(Product.id == cate.id_product)
                 .limit(1)
@@ -173,14 +195,16 @@ class Getter:
                 for elt in query:
                     print("===============================================")
                     print("------*** product name :", elt.name, "***------")
-                    print(" nutriscore --> ", elt.product_nutriscore.nutriscores)
+                    print(" nutriscore --> ", elt
+                          .product_nutriscore.nutriscores)
                     print(" shop --------> ", elt.shop)
                     print(" url  --------> ", elt.url)
                     print("===============================================")
                     print("===============================================")
                     return self.__get_int_from_peewee(elt.id)
             else:
-                print("Ooops we don't find better product for your choice sorry :/")
+                print("Ooops we don't find "
+                      "better product for your choice sorry :/")
 
     def get_better_choice(self, selected_product_id):
         """ get the better choice (all steps) """
@@ -191,7 +215,8 @@ class Getter:
     @staticmethod
     def get_count_all_product():
         """ get the number of product in the database """
-        quantity = Product.select(peewee.fn.COUNT(Product.id).alias("count")).get()
+        quantity = (Product
+                    .select(peewee.fn.COUNT(Product.id).alias("count")).get())
         return int(quantity.count)
 
     @staticmethod
